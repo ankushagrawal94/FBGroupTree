@@ -3,6 +3,7 @@
 import sys
 import json
 import UserDict
+import os
 
 class Node(object):
     def __init__(self, nid, parent, name):
@@ -23,13 +24,15 @@ class NodeDict(UserDict.UserDict):
 class NodeJSONEncoder(json.JSONEncoder):
   def default(self, node):
     if type(node) == Node:
-      return {"name":node.nid, "parent":node.parent, "children":node.children}
+      return {"name":node.nid, "parent":node.parent, "_children":node.children}
     raise TypeError("{} is not an instance of Node".format(node))
 
 
+os.system("sort "+ sys.argv[1] +" | uniq > " + "uniq" + sys.argv[1])
+
 nodes = []
 
-with open(sys.argv[1]) as f:
+with open("uniq" + sys.argv[1]) as f:
   for row in f.readlines()[:]:
     if len(row) < 3:
       continue
@@ -39,20 +42,9 @@ with open(sys.argv[1]) as f:
     nodes.append(Node(nid.strip(), parent.strip(), name.strip()))
 nodes.append(Node("0000000000", "null", "HackathonHackers"))
 
-dupChecker = {}
-for node in nodes:
-  if node.name in dupChecker:
-    nodes.remove(node)
-  else:
-    dupChecker[node] = 1
 nodeDict = NodeDict()
 nodeDict.addNodes(nodes)
 
-lst = []
-for node in nodes:
-  lst.append(node.nid)
-
-print sorted(lst)
 rootNodes = [node for nid, node in nodeDict.items() if node.parent == "null"]
 
 for rootNode in rootNodes:

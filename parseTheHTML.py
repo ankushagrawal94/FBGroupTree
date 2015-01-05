@@ -19,15 +19,41 @@ def getDetails(startPhrase):
     tmp = html_str[addedByStartIdx + html_str[addedByStartIdx:].find("data-utime=") : addedByStartIdx + html_str[addedByStartIdx:].find("class=")]
     utime = tmp[12:len(tmp) - 2]
     
+    if name not in name_dict:
+      name_dict[name] = (name, addedBy, utime, startPhrase)
     print name + '\t' + addedBy + '\t' + utime
 
-f = open('HTML.txt', 'r')
+#from ete2 import Tree
+f = open('twoLetter.txt', 'r')
 html_str = ""
 for line in f:
   html_str += line
 
+name_dict = {}
+contribution_dict = {}
 getDetails("Added by")
-print '\n\n\n\n\n\n\n\n'
-getDetails("Joined about")
+print '\n\n'
+getDetails("Joined")
+print '\n\n'
 
+for person in name_dict:
+  if name_dict[person][1] not in contribution_dict:
+    contribution_dict[name_dict[person][1]] = [name_dict[person][0]]
+  else:
+    contribution_dict[name_dict[person][1]].append(name_dict[person][0])
 
+#for person in contribution_dict:
+  #print person + "\t" + str(len(contribution_dict[person]))
+#roots = []
+#for name in name_dict:
+#  if name_dict[person][3] == "Joined":
+#    roots.append(name_dict[person][0])
+
+#roots = [x for x in name_dict.keys() if x not in contribution_dict.keys()]
+#print roots
+
+#t = Tree()
+#for root in roots:
+#  t.add_child(name: root)
+
+#print t
