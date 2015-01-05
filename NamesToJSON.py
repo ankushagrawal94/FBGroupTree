@@ -3,7 +3,6 @@
 import sys
 import json
 import UserDict
-from collections import OrderedDict
 
 class Node(object):
     def __init__(self, nid, parent, name):
@@ -28,7 +27,7 @@ class NodeJSONEncoder(json.JSONEncoder):
     raise TypeError("{} is not an instance of Node".format(node))
 
 
-nodes = set()
+nodes = []
 
 with open(sys.argv[1]) as f:
   for row in f.readlines()[:]:
@@ -37,17 +36,24 @@ with open(sys.argv[1]) as f:
     name, parent, nid = row.split('\t')
     if parent == "":
       parent = "HackathonHackers"
-    nodes.add(Node(nid.strip(), parent.strip(), name.strip()))
-nodes.add(Node("0000000000", "null", "HackathonHackers"))
-newNodes = list(OrderedDict.fromkeys(nodes))
-nodeDict = NodeDict()
-nodeDict.addNodes(newNodes)
+    nodes.append(Node(nid.strip(), parent.strip(), name.strip()))
+nodes.append(Node("0000000000", "null", "HackathonHackers"))
 
-rootNodes = [node for nid, node in nodeDict.items() if node.parent == "null"]
+dupChecker = {}
+for node in nodes:
+  if node.name in dupChecker:
+    nodes.remove(node)
+  else:
+    dupChecker[node] = 1
+nodeDict = NodeDict()
+nodeDict.addNodes(nodes)
+
 lst = []
-for node in newNodes:
+for node in nodes:
   lst.append(node.nid)
+
 print sorted(lst)
+rootNodes = [node for nid, node in nodeDict.items() if node.parent == "null"]
 
 for rootNode in rootNodes:
   print NodeJSONEncoder().encode(rootNode)        
