@@ -38,9 +38,9 @@ with open("uniq" + sys.argv[1]) as f:
       continue
     name, parent, nid = row.split('\t')
     if parent == "":
-      parent = "HackathonHackers"
+      parent = "MHacks"
     nodes.append(Node(nid.strip(), parent.strip(), name.strip()))
-nodes.append(Node("0000000000", "null", "HackathonHackers"))
+nodes.append(Node("0000000000", "null", "MHacks"))
 
 nodeDict = NodeDict()
 nodeDict.addNodes(nodes)

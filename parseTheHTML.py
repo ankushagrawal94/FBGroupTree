@@ -1,3 +1,5 @@
+import sys
+
 def findnth(fullStr, shortStr, n):
     parts= fullStr.split(shortStr, n+1)
     if len(parts)<=n+1:
@@ -24,7 +26,7 @@ def getDetails(startPhrase):
     print name + '\t' + addedBy + '\t' + utime
 
 #from ete2 import Tree
-f = open('twoLetter.txt', 'r')
+f = open(sys.argv[1], 'r')
 html_str = ""
 for line in f:
   html_str += line

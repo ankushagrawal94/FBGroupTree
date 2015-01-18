@@ -7,41 +7,36 @@ casper.start("http://www.facebook.com/login.php", function(response) {
         document.querySelector("input[name='pass']").value = b;
         document.querySelector("#login_form").submit(); 
         console.log("Login submitted!");
-    }, 'user','password');
+    }, 'user-email','user-password');
 }).wait(4000, function(){
-    this.capture('imgRepeats/'+'ihateads@yahoo.com'+'_login.png');
+    this.capture('imgTwoLetter/'+'ihateads@yahoo.com'+'_login.png');
 })
 
-casper.thenOpen('https://www.facebook.com/groups/hackathonhackers/members/?order=alphabetical', function() {
-    this.echo(this.getTitle());
-    this.capture('imgRepeats/'+'hackathonhackers.png');
-    if (this.exists('a.pam.uiBoxLightblue.uiMorePagerPrimary')) {
-        this.echo('the see more button exists');
-        this.mouseEvent('click', 'a.pam.uiBoxLightblue.uiMorePagerPrimary');
-    }
-    else{
-      console.log('the see more button does not exist :[ ');
-    }
-}).wait(4000);
+var alphabet = "abcdefghijklmnopqrstuvwxyz";
+twoLetter = []
+for( i = 0; i < alphabet.length; i++) {
+  for( j = 0; j < alphabet.length; j++){
+    twoLetter.push(alphabet[i] + alphabet[j]);
+  }
+}
 
-var j = 0
-for( i = 0; i < 150; i++) {
-  casper.then(function() {
-    console.log("next then :D");
-    this.capture('imgRepeats/'+'hackathonhackers' + j++ + '.png');
-    if (this.exists('a.pam.uiBoxLightblue.uiMorePagerPrimary')) {
-          this.echo('the heading exists');
-          this.mouseEvent('click', 'a.pam.uiBoxLightblue.uiMorePagerPrimary');
-      }
-      else{
-        console.log('does not exist :[ ');
-      }
-  }).wait(4000);
+console.log(twoLetter.length)
 
+var j = 0;
+for (i = 0; i < twoLetter.length; i++){
   casper.then(function() {
+    this.open('https://www.facebook.com/groups/1506039289667163/members/?order=alphabetical&member_query='+twoLetter[j++]).then(function() {
+      var page_title = this.getTitle();
+      this.echo(page_title);
+      this.capture('img/'+ page_title + twoLetter[j] + '.png');
+    })
+  })
+   casper.then(function() {
     console.log(this.getHTML());
   });
+
 }
+
 
 
 
